@@ -1,6 +1,5 @@
-from linear_regression import linear_regression
-from colors import Colors
-
+from machine_learning_algorithms.linear_regression import linear_regression
+from utils.formatting.colors import Colors
 
 if __name__ == '__main__':
 
@@ -24,12 +23,12 @@ if __name__ == '__main__':
                     linear_regression()
                     print(Colors.OKCYAN, "\n\nLinear Regression Algorithm example completed", Colors.ENDC)
                     print(Colors.FAIL, "\n\n-------------------------------------------------------------------------"
-                                         "--------------", Colors.ENDC)
+                                       "--------------", Colors.ENDC)
                 case 2:
                     print(Colors.OKCYAN, "\n\nLogistic Regression Algorithm example completed", Colors.ENDC)
+                    print(Colors.FAIL, "\n\n-------------------------------------------------------------------------"
+                                       "--------------", Colors.ENDC)
                 case 3:
                     print(Colors.OKCYAN, "Opción 3 seleccionada", Colors.ENDC)
                 case _:
                     print(Colors.OKCYAN, "Opción no válida", Colors.ENDC)
-
-
