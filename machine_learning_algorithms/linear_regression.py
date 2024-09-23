@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from utils.formatting.Spinner import Spinner
 from utils.formatting.colors import Colors
+from utils.representation import draw_figure_lineal
 
 
 # Scaling the number of affected computers
@@ -16,19 +17,6 @@ def scale(df):
     return df
 
 
-# Graphical representation
-def draw_figure(iplt, x, y, x_min_max=None, y_train_pred=None, x_new=None, cost=None):
-    iplt.figure(figsize=(10, 5))
-    iplt.title('Graphical representation of the data set')
-    iplt.plot(x, y, 'b.')
-    if x_min_max is not None:
-        iplt.plot(x_min_max, y_train_pred, "g-")
-    if cost is not None:
-        iplt.plot(x_new, cost, "rx")
-    iplt.xlabel("Affected equipment")
-    iplt.ylabel("Incident cost")
-
-
 # Cost of a security incident
 
 # The exercise consists of predicting the cost of a security incident based on the number
@@ -37,13 +25,19 @@ def draw_figure(iplt, x, y, x_min_max=None, y_train_pred=None, x_new=None, cost=
 
 def linear_regression():
     spinner = Spinner()
-    print(Colors.HEADER, Colors.UNDERLINE, "\nLINEAR REGRESSION ALGORITHM'S \n", Colors.ENDC)
+    print(Colors.HEADER, Colors.UNDERLINE, "\nLINEAR REGRESSION ALGORITHM \n", Colors.ENDC)
     print(Colors.HEADER, "\nThe exercise consists of predicting the cost of a security incident based on the number\n"
                          "of computers that have been affected. In this case the data set is generated randomly in real\n"
                          "situations should use real data recollected from past experiences. \n\n", Colors.ENDC)
 
-    num_sample = int(input(
-        Colors.OKCYAN + "\nEnter the number of past security incidents the data set should contain? (!max-100000000)\n" + Colors.ENDC))
+    input_checked = False
+    num_sample = 0
+    while input_checked is False:
+        num_sample = int(input(
+            Colors.OKCYAN + "\nEnter the number of past security incidents the data set should contain: (!max-100000000)\n"
+            + Colors.ENDC))
+        if 0 < num_sample:
+            input_checked = True
 
     x = spinner.run_with_spinner(lambda: 2 * np.random.rand(num_sample, 1), 'affected computers data')
     y = spinner.run_with_spinner(lambda: 4 + 3 * x + np.random.randn(num_sample, 1), 'cost data')
@@ -65,7 +59,7 @@ def linear_regression():
 
     # Graphical representation of the data set
 
-    spinner.run_with_spinner(lambda: draw_figure(plt, df['n_affected_computers'], df['cost']), 'data set figure')
+    spinner.run_with_spinner(lambda: draw_figure_lineal(plt, df['n_affected_computers'], df['cost']), 'data set figure')
 
     # Construction of the model and adjustment of the hypothesis function
     lin_reg = LinearRegression()
@@ -87,11 +81,18 @@ def linear_regression():
     y_train_pred = spinner.run_with_spinner(lambda: lin_reg.predict(x_min_max), 'hypothesis function')
 
     # Graphical representation of the generated hypothesis function
-    spinner.run_with_spinner(lambda: draw_figure(plt, df['n_affected_computers'], df['cost'],
-                             x_min_max, y_train_pred), 'hypothesis function figure')
+    spinner.run_with_spinner(lambda: draw_figure_lineal(plt, df['n_affected_computers'], df['cost'],
+                                                        x_min_max, y_train_pred), 'hypothesis function figure')
 
     # Predicting new examples
-    x_new = np.array([[int(input(Colors.OKCYAN + "\nEnter the number of affected equipment?\n" + Colors.ENDC))]])
+    pred_input_checked = False
+    num_sample_pred = 0
+    while pred_input_checked is False:
+        num_sample_pred = int(input(Colors.OKCYAN + "\nEnter the number of affected equipment?\n" + Colors.ENDC))
+        if 0 < num_sample_pred:
+            pred_input_checked = True
+
+    x_new = np.array([[num_sample_pred]])
 
     # Prediction of the cost that the incident would have
 
@@ -102,7 +103,7 @@ def linear_regression():
 
     print(Colors.WARNING, "\nClose graphics tabs to continue", Colors.ENDC, )
 
-    spinner.run_with_spinner(lambda: draw_figure(plt, df['n_affected_computers'], df['cost'], x_min_max,
-                                                 y_train_pred, x_new, cost), 'hypothesis function figure')
+    spinner.run_with_spinner(lambda: draw_figure_lineal(plt, df['n_affected_computers'], df['cost'], x_min_max,
+                                                        y_train_pred, x_new, cost), 'hypothesis function figure')
 
     plt.show()
