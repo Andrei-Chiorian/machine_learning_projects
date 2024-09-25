@@ -49,8 +49,9 @@ def logistic_regression():
                          "The dataset contains 75.419 messages\n\n", Colors.ENDC)
 
     try:
-        # Intentamos cargar el modelo
+        # We try to load the model
         clf = load('logi_reg_trained_model.joblib')
+        vectorizer = load('count_vectorizer_model.joblib')
         print("Model loaded successfully.")
 
         test_input_checked = False
@@ -65,10 +66,8 @@ def logistic_regression():
 
         X_test, y_test = X, y
 
-        print(Colors.WARNING, f"\nNumbers of email for testing:", Colors.ENDC, Colors.OKGREEN, len(X_test),
+        print(Colors.WARNING, f"\n\nNumbers of email for testing:", Colors.ENDC, Colors.OKGREEN, len(X_test),
               '\n', Colors.ENDC)
-
-        vectorizer = CountVectorizer()
 
         X_test = vectorizer.transform(X_test)
         y_pred = spinner.run_with_spinner(lambda: clf.predict(X_test), "predicting result")
@@ -84,8 +83,11 @@ def logistic_regression():
 
         print(Colors.OKBLUE, '\nAccuracy: {:.3f}'.format(accuracy_score(y_test, y_pred)), Colors.ENDC)
 
+        print(Colors.WARNING, f'\nTo start with a new model please delete "logi_reg_trained_model.joblib" and'
+                              f' "count_vectorizer_model.joblib" \nfrom the root of the project', Colors.ENDC)
+
     except FileNotFoundError:
-        # Si no existe el archivo, capturamos la excepción
+        # If the file doesn't exist, we create it
         clf = LogisticRegression()
         print("Model file not found. Continuing without loading the model.")
 
@@ -183,6 +185,7 @@ def logistic_regression():
                 if to_save == 'y':
                     try:
                         dump(clf, 'logi_reg_trained_model.joblib')
+                        dump(vectorizer, 'count_vectorizer_model.joblib')
                         print("Model saved successfully.")
                     except Exception as e:
                         print("Model could not be saved.")
