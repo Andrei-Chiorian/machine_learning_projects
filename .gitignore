@@ -1,5 +1,5 @@
 
 *.pyc
-/datasets
+#/datasets
 *.joblib
-/archive
+#/archive
