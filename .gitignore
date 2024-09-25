@@ -3,4 +3,5 @@
 #/datasets
 *.joblib
 #/archive
-/.idea
+.venv/
+.idea/
